@@ -16,6 +16,7 @@ URL:            http://github.com/%{github_user}/%{github_repo}
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildArch:      noarch
+BuildRequires:  git
 Requires:       python-daemonize, python-setproctitle, python-simplejson, python-simplemail
 
 %description
@@ -24,7 +25,12 @@ It will also kill all the unnecessary shit which should be dead.
 It works on multiple hosts.
 
 %prep
-curl -L -o %{github_repo}-%{github_tag}.tar.gz https://github.com/%{github_user}/%{github_repo}/archive/%{github_tag}.tar.gz
+git clone git@github.com:%{github_user}/%{github_repo}
+cd %{github_repo}
+git reset --hard %{github_tag}
+rm -rf .git
+cd ..
+mv %{github_repo} %{github_repo}-%{github_tag}
 tar xf %{github_repo}-%{github_tag}.tar.gz
 cd %{github_repo}-%{github_tag}
 
